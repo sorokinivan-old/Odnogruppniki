@@ -1,0 +1,95 @@
+﻿
+@{
+    ViewBag.Title = "Редактирование";
+    var userId = ViewBag.UserId;
+    var faculties = ViewBag.Faculties;
+    var departments = ViewBag.Departments;
+    var groups = ViewBag.Groups;
+    var info = ViewBag.User;
+}
+
+<script>
+    function changePhoto() {
+        var photoId = $("#photoID").val();
+        if (photoId != "") {
+            $("#imageID").attr('src', photoId);
+        }
+        else {
+            $("#imageID").attr('src', "/Content/defaultphoto.jpg");
+        }
+    }
+
+    function saveInfo() {
+        var url = '@Url.Action("SaveInfo", "Home")';
+        var photo = $('#imageID').attr('src');
+        var aboutInfo = $("#aboutInfo").val();
+        var data = { photo: photo, aboutInfo: aboutInfo };
+        $.post(url, data).done(function () {
+            alert("Ваша информация успешно сохранена!");
+        }).fail(function () {
+            alert("Произошла ошибка, попробуйте еще раз!");
+        });
+    }
+</script>
+
+<br />
+
+<div style="width:80%; margin-left:10%; margin-right:10%">
+    @if (info.Photo == "")
+    {
+        <img src="~/Content/defaultphoto.jpg" id="imageID" class="img-circle" alt="Загрузите фото" style="width:100px; height:100px" />
+    }
+    else
+    {
+        <img src="@info.Photo" id="imageID" class="img-circle" alt="Загрузите фото" style="width:100px; height:100px" />
+    }
+    <input type="text" id="photoID" class="btn-info" style="border-radius:10px" />
+    <button type="button" class="btn-info" style="border-radius:10px" onclick="changePhoto()">Редактировать фото</button>
+    <select>
+        <option value="0" disabled="disabled">Институт</option>
+        @foreach (var fac in faculties)
+        {
+            if (info.IdFaculty == fac.Id)
+            {
+                <option selected value="@fac.Id">@fac.Name</option>
+            }
+            else
+            {
+                <option value="@fac.Id">@fac.Name</option>
+            }
+        }
+    </select>
+    <select>
+        <option value="0" disabled="disabled">Кафедра</option>
+        @foreach (var dep in departments)
+        {
+            if (info.IdDepartment == dep.Id)
+            {
+                <option selected value="@dep.Id">@dep.Name</option>
+            }
+            else
+            {
+                <option value="@dep.Id">@dep.Name</option>
+            }
+        }
+    </select>
+    <select>
+        <option value="0" disabled="disabled">Группа</option>
+        @foreach (var gr in groups)
+        {
+            if (info.IdGroup == gr.Id)
+            {
+                <option selected value="@gr.Id">@gr.Name</option>
+            }
+            else
+            {
+                <option value="@gr.Id">@gr.Name</option>
+            }
+        }
+    </select>
+    <textarea class="jumbotron" id="aboutInfo" rows="10" placeholder="О себе" cols="150" style="max-height:100%; max-width:100%; height:100%; width:100%; resize:none">@info.AboutInfo</textarea>
+</div>
+<div style="width:80%; margin-left:10%; margin-right:10%">
+    <button type="button" class="btn-info" style="border-radius:10px" onclick="saveInfo()">Сохранить информацию</button>
+    <button type="button" class="btn-info" style="border-radius:10px" onclick="window.location.href='/Personal/PersonalInfo'">Вернуться</button>
+</div>

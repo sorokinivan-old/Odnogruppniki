@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewBag.Title = "Logout";
+}
+
+<script type="text/javascript">
+    function logout() {
+        $.ajax({
+            url: '@Url.Action("Logout","Home")',
+            type: 'POST',
+            dataType: 'json',
+            success: function (data) {
+                if (data.Success) {
+                    window.location = '@Url.Action("Index","Home")'
+                }
+            }
+        });
+    }
+</script>
+
+<h2>Вы действительно хотите выйти?</h2>
+<br />
+<input class="form-control" type="button" id="editButton" onclick="logout()" value="Выйти" style="height:inherit; margin-left:50px; width:200px; border-radius:8px; background-color:cornflowerblue; color:ivory" />
+

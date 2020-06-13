@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+}
+
+<br /><br /><br />
+
+<script type="text/javascript">
+    function login() {
+        var log = $("#login").val();
+        var pass = $("#pass").val();
+        var data = {
+            'login': log,
+            'password': pass
+        };
+        $.ajax({
+            type: 'POST',
+            data: data,
+            url: '@Url.Action("Login", "Home")',
+            dataType: 'json',
+            success: function (data) {
+                if (data.Success) {
+                    window.location = '@Url.Action("Index","Home")';
+                } else {
+                    alert(data.Error);
+                }
+            }
+        });
+    }
+</script>
+<style>
+    .row{
+        width:inherit;
+        margin-left:0px;
+    }
+    input{
+        max-width:100%;
+    }
+</style>
+<div style="width:60%; margin-left:20%; margin-right:20%">
+    <div class="table" style="text-align: -webkit-center">
+        <div class="row">
+            <h4>Логин</h4>
+            <input style="margin-top:10px; text-align:center" type="text" name="login" id="login" />
+        </div>
+        <div class="row">
+            <h4>Пароль</h4>
+            <input type="password" style="margin-top:10px; text-align:center" name="pass" id="pass" />
+        </div>
+        <div class="row" style="margin-top:15px">
+            <input class="form-control" type="button" id="editButton" onclick="login()" value="Вход" style="height:inherit; width:100px; border-radius:8px; background-color:cornflowerblue; color:ivory" />
+        </div>
+    </div>
+</div>
+
+

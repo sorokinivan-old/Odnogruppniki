@@ -1,0 +1,350 @@
+﻿@{
+    ViewBag.Title = "Создатель опросов";
+    var department = ViewBag.DepartmentList;
+    var role = ViewBag.RoleList;
+    var faculty = ViewBag.FacultyList;
+    var group = ViewBag.GroupList;
+    string tempWho;
+    int answerNumber = 1;
+    var isSaati = ViewBag.Saati;
+}
+
+<script type="text/javascript">
+    function ContinueCreate(stage) {
+        if (stage == 0) {
+            var isSaati = document.getElementById("isSaati").checked;
+            if (isSaati == true) {
+                var str = 2;
+            } else {
+                var str = 1;
+            }
+            //saati = isSaati;
+            var who = document.getElementById("interviewerSelect");
+
+            //if (who.value == 0) {
+            //    alert("fffff");
+            //}
+            if (document.getElementById("interviewName").value != null) {
+                var interviewName = document.getElementById("interviewName").value;
+            }
+            else {
+                var interviewName = null
+            }
+
+            if (document.getElementById("RoleSelect").value != null) {
+                var interviewRole = document.getElementById("RoleSelect").value;
+            }
+            else {
+                var interviewRole = null
+            }
+            if (who.value != 0) {
+                if (document.getElementById(who.value + "Select").value != null) {
+                    var interviewWho = who.value;
+                    var interviewWhoId = document.getElementById(who.value + "Select").value;
+                }
+                else {
+                    var interviewWho = null;
+                    var interviewWhoId = null
+                }
+            }
+            else {
+                var interviewWho = "Department";
+                var interviewWhoId = document.getElementById("DepartmentSelect").value;
+                var interviewRole = 2
+            }
+            //var interviewWho = document.getElementById(who.value + "Select").value;
+            //var interviewRole = document.getElementById("RoleSelect").value;
+            //var interviewName = document.getElementById("interviewName").value;
+            var complete = false;
+            var data = {
+                'isSaati': isSaati,
+                'interviewName': interviewName,
+                'interviewRole': interviewRole,
+                'interviewWho': interviewWho,
+                'interviewWhoId': interviewWhoId,
+                'categoryName': null,
+                'questionName': null,
+                'answers': null,
+                'weights': null,
+                'complete': stage
+            };
+        } else if (stage == 1) {
+            for (let i = 1; i <= number; i++) {
+                var t = 'answer' + i;
+                var temp = document.getElementById(t).value;
+                arr.answers.push(temp);
+                var weight = 'weight' + i;
+                var checkElement = document.getElementById(weight);
+                if (checkElement != null) {
+                    if (document.getElementById(weight).value != null) {
+                        var temp2 = document.getElementById(weight).value;
+                        arr2.weights.push(temp2);
+                    }
+                    else {
+                        arr2.weights = null
+                    }
+                } else {
+                    arr2.weights = null
+                }
+            }
+            var categoryName = document.getElementById("categoryName").value;
+            var questionName = document.getElementById("questionName").value;
+            if (arr2.weights == null) {
+                isSaati = false,
+                    arr2.weights = null
+            } else {
+                isSaati = true
+            }
+
+            if (isSaati == true) {
+                var str = 2;
+            } else {
+                var str = 1;
+            }
+            var data = {
+                'isSaati': isSaati,
+                'interviewName': null,
+                'interviewRole': null,
+                'interviewWho': null,
+                'interviewWhoId': null,
+                'categoryName': categoryName,
+                'questionName': questionName,
+                'answers': arr.answers,
+                'weights': arr2.weights,
+                'complete': stage
+            };
+        } else {
+            str = 3;
+            //for (let i = 1; i <= number; i++) {
+            //    var t = 'answer' + i;
+            //    var temp = document.getElementById(t).value;
+            //    var weight = 'weight' + i;
+            //    var temp2 = document.getElementById(weight).value;
+            //    arr.answers.push(temp);
+            //    arr2.weights.push(temp2);
+            //}
+            for (let i = 1; i <= number; i++) {
+                var t = 'answer' + i;
+                var temp = document.getElementById(t).value;
+                arr.answers.push(temp);
+                var weight = 'weight' + i;
+                var checkElement = document.getElementById(weight);
+                if (checkElement != null) {
+                    if (document.getElementById(weight).value != null) {
+                        var temp2 = document.getElementById(weight).value;
+                        arr2.weights.push(temp2);
+                    }
+                    else {
+                        arr2.weights = null
+                    }
+                } else {
+                    arr2.weights = null
+                }
+            }
+            var categoryName = document.getElementById("categoryName").value;
+            var questionName = document.getElementById("questionName").value;
+            var data = {
+                'isSaati': null,
+                'interviewName': null,
+                'interviewRole': null,
+                'interviewWho': null,
+                'interviewWhoId': null,
+                'categoryName': categoryName,
+                'questionName': questionName,
+                'answers': arr.answers,
+                'weights': arr2.weights,
+                'complete': stage
+            }
+        }
+        if (((interviewName == "" || interviewRole == "" || interviewWho == "" || interviewWhoId == "") && stage == 0 && isSaati == false) || (interviewWhoId == "" && isSaati == true && stage == 0)) {
+            alert('Заполните все поля формы');
+        } else if ((questionName == "" || arr.answers == null) && (stage == 1 || stage == 2)) {
+            alert('Заполните все поля формы');
+        } else {
+            $.ajax({
+            url: '@Url.Action("SaveInterviewMainInformation", "Interview")',
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            success: function (data) {
+                if (data.Success) {
+                    @*window.location = '@Url.Action("GetQuestion", "Interview")' + '?IdQuestion=' + idq;*@
+                window.location = '@Url.Action("Creator", "Interview")' + '?str=' + str;
+                    @*window.location=@Url.Action("Creator", "Interview", new { str = 1, saati =  issSaati});*@
+                    @*window.location = '@Url.Action("Login", "Home")';*@
+                } else {
+                    alert(data.Error);
+                }
+            }
+        });
+        }
+
+        
+        }
+
+
+
+</script>
+<div class="center-block" style="width:80%">
+    <h2>Создание опросов</h2>
+    @{
+        if (ViewBag.DepartmentList != null)
+        {
+            <div class="row">
+                <h4>Нужно ли обрабатывать результаты данного опроса методом Саати?</h4>
+                <input type="checkbox" onclick="react()" id="isSaati" name="saatiCheck" style="width:500px" />
+                <c>
+                    <h4>Название опроса</h4>
+                    <input type="text" id="interviewName" style="margin-left:20px; width:500px" />
+                    <h4>Укажите категорию пользователей, для кого создается опрос</h4>
+                    <select class="form-control" id="RoleSelect" style="margin-left:20px">
+                        <option selected>Выберите роль...</option>
+                        @{ foreach (var roles in role)
+                            {
+                                <option value="@roles.Id">@roles.Name</option>
+                            }
+                        }
+                    </select>
+                    <h4>Выберите, для кого предназначен опрос</h4>
+                    <select onchange="react2()" class="form-control" id="interviewerSelect" style="margin-left:20px">
+                        <option selected value="0">Выберите, для кого создается опрос...</option>
+                        <option value="Faculty">Институт</option>
+                        <option value="Department">Кафедра</option>
+                        <option value="Group">Группа</option>
+                        }
+                    </select>
+                    <br />
+                    <z hidden>
+                        <h4>Выберите институт, для которого предназначен опрос</h4>
+                        <select class="form-control" id="FacultySelect" style="margin-left:20px">
+                            <option selected>Выберите институт...</option>
+                            @{ foreach (var facult in faculty)
+                                {
+                                    <option value="@facult.Id">@facult.Name</option>
+                                }
+                            }
+                        </select>
+                    </z>
+                    <e hidden>
+                        <h4>Выберите группу, для которой предназначен опрос</h4>
+                        <select class="form-control" id="GroupSelect" style="margin-left:20px">
+                            <option selected>Выберите группу...</option>
+                            @{ foreach (var gr in group)
+                                {
+                                    <option value="@gr.Id">@gr.Name</option>
+                                }
+                            }
+                        </select>
+                    </e>
+                </c>
+                <d hidden>
+                    <h4>Выберите кафедру, для которой предназначен опрос</h4>
+                    <select class="form-control" id="DepartmentSelect" style="margin-left:20px">
+                        <option selected>Выберите кафедру...</option>
+                        @{ foreach (var dep in department)
+                            {
+                                <option value="@dep.Id">@dep.Name</option>
+                            }
+                        }
+                    </select>
+                </d>
+                <br />
+                <input class="form-control" type="button" id="nextQuestion" onclick="ContinueCreate(0)" value="Далее" style="height:inherit; margin-left:50px; width:200px; border-radius:8px; background-color:cornflowerblue; color:ivory" />
+            </div>
+        }
+        else
+        {
+            <h4>Введите категорию опроса</h4>
+            <input type="text" id="categoryName" style="width:500px">
+            <h4>Введите вопрос</h4>
+            <input type="text" id="questionName" style="width:500px" />
+            <r>
+
+            </r>
+            <input class="form-control" type="button" id="nextQuestion" onclick="addAnswer()" value="Добавить ответ" style="height:inherit; margin-left:50px; width:200px; border-radius:8px; background-color:cornflowerblue; color:ivory" />
+            <br />
+            <input class="form-control" type="button" id="nextQuestion" onclick="ContinueCreate(1)" value="Далее" style="height:inherit; margin-left:50px; width:200px; border-radius:8px; background-color:cornflowerblue; color:ivory" />
+            <br />
+            <input class="form-control" type="button" id="nextQuestion" onclick="ContinueCreate(2)" value="Завершить создание опроса" style="height:inherit; margin-left:50px; width:200px; border-radius:8px; background-color:cornflowerblue; color:ivory" />
+        }
+    }
+
+</div>
+<script>
+    var number = 0;
+    var arr = [];
+    arr["answers"] = [];
+    var arr2 = [];
+    arr2["weights"] = [];
+    function react() {
+        //alert("fdf");
+        //isHidden = document.querySelector('input[name="saatiCheck"]:checked').value;
+        var checkBox = document.getElementById("isSaati");
+        //isShowed = document.querySelector('input[name="saatiCheck"]').value;
+        //alert(checkBox.checked);
+        if (checkBox.checked == true) {
+            $("d").show();
+            $("c").hide();
+        }
+        if (checkBox.checked == false) {
+            $("d").hide();
+            $("c").show();
+        }
+    }
+
+    function react2() {
+        //alert("fdf");
+        //isHidden = document.querySelector('input[name="saatiCheck"]:checked').value;
+        var choose = document.getElementById("interviewerSelect");
+        //isShowed = document.querySelector('input[name="saatiCheck"]').value;
+        //alert(choos.value);
+        //alert(choose.value);
+        if (choose.value == "Faculty") {
+            $("z").show();
+            $("e").hide();
+            $("d").hide();
+        }
+        if (choose.value == "Department") {
+            $("z").hide();
+            $("e").hide();
+            $("d").show();
+        }
+        if (choose.value == "Group") {
+            $("z").hide();
+            $("e").show();
+            $("d").hide();
+        }
+    }
+    var count = 1;
+    function addAnswer() {
+        number++;
+        var saati = @Html.Raw(Json.Encode(ViewBag.Saati));
+        $('<h4>Введите ответ</h4>').appendTo($("r"));
+        $('<input type="text" id="answer' + number + '" style="width:500px"/>').appendTo($("r"));
+        if (saati == true) {
+            $('<h4>Введите вес ответа</h4>').appendTo($("r"));
+            $('<input type="text" id="weight' + number + '" style="width:500px" />').appendTo($("r"));
+        }
+
+        //if (count != 1) {
+        //    var r = number - 1;
+
+        //var t = 'answer' + r;
+        //var temp = document.getElementById(t).value;
+        //var weight = 'weight' + r;
+        //    var temp2 = document.getElementById(weight).value;
+        //arr.answers.push(temp);
+        //arr2.weights.push(temp2);
+        //}
+        //count = count + 1;
+        //alert(arr.answers);
+
+
+        //  append($('<div>', {
+        //  'text': 'Текст... [' + (new Date()).toLocaleString() + '])'
+        //}));
+
+
+
+    }
+</script>

@@ -1,0 +1,121 @@
+﻿@{
+    ViewBag.Title = "Выполненные опросы";
+    var questions = ViewBag.Questions;
+    var answers = ViewBag.Answers;
+    var resultsCount = ViewBag.ResultsCount;
+    var categories = ViewBag.Category;
+    var averageCategory = ViewBag.AverageCategory;
+    var a = false;
+}
+<div class="center-block" style="width:80%; margin-bottom:50px">
+    <div>
+        <h2>Результаты опроса</h2>
+    </div>
+    <p>
+        @*<p style="padding-bottom: 50px">*@
+    <p style="margin-bottom: auto">
+        @{ if (categories.Count != 0)
+            {
+                foreach (var category in categories)
+                {
+                    <h2>Категория: @category.Name</h2><br>
+                    foreach (var question in questions)
+                    {
+                        if (question.IdCategory == category.Id || question.IdCategory == null)
+                        {
+                            <br><b>@question.Question</b><Br>
+                            foreach (var answer in answers)
+                            {
+                                if (answer.IdQuestion != 0 && answer.IdQuestion == question.Id)
+                                {
+                                    //resultsCount.filter(resultsCount.IdAnswer == answer.Id && resultsCount.IdQuestion == question.Id);
+                                    <br>@answer.Answer<br>
+                                    a = true;
+                                    foreach (var result in resultsCount)
+                                    {
+                                        if (result.idAnswer == answer.Id && result.idQuestion == question.Id)
+                                        {
+                                            @result.count<Br>
+                                        }
+                                    }
+                                }
+                            }
+                            foreach (var answer in answers)
+                            {
+                                if (a == false && answer.IdQuestion == 0)
+                                {
+                                    //resultsCount.filter(resultsCount.idAnswer == answer.Id && resultsCount.idQuestion == question.Id);
+                                    <br>@answer.Answer<br>
+                                    foreach (var result in resultsCount)
+                                    {
+                                        if (result.idAnswer == answer.Id && result.idQuestion == question.Id)
+                                        {
+                                            @result.count<br>
+                                        }
+                                    }
+                                }
+                            }
+                            a = false;
+                        }
+                    }
+                    @*foreach (var cat in averageCategory)
+                        {
+                            if (cat.id == category.Id)
+                            {
+                                <h4>Среднее по категории:</h4> @cat.average<br>
+                            }
+                        }*@
+                }
+            }
+            else
+            {
+                foreach (var question in questions)
+                {
+                    <br><b>@question.Question</b><Br>
+                    foreach (var answer in answers)
+                    {
+                        if (answer.IdQuestion != 0 && answer.IdQuestion == question.Id)
+                        {
+                            //resultsCount.filter(resultsCount.IdAnswer == answer.Id && resultsCount.IdQuestion == question.Id);
+                            <br>@answer.Answer<br>
+                            a = true;
+                            foreach (var result in resultsCount)
+                            {
+                                if (result.idAnswer == answer.Id && result.idQuestion == question.Id)
+                                {
+                                    @result.count<Br>
+                                }
+                            }
+                        }
+                    }
+                    foreach (var answer in answers)
+                    {
+                        if (a == false && answer.IdQuestion == 0)
+                        {
+                            //resultsCount.filter(resultsCount.idAnswer == answer.Id && resultsCount.idQuestion == question.Id);
+                            <br>@answer.Answer<br>
+                            foreach (var result in resultsCount)
+                            {
+                                if (result.idAnswer == answer.Id && result.idQuestion == question.Id)
+                                {
+                                    @result.count<br>
+                                }
+                            }
+                        }
+                    }
+                    a = false;
+                }
+            }
+        }
+
+
+    </p>
+
+
+</div>
+
+<script>
+    function returnResult(id) {
+        return id == id;
+    }
+</script>

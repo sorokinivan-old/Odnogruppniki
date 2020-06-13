@@ -1,0 +1,211 @@
+﻿@{
+    ViewBag.Title = "Выполненные опросы";
+    var questions = ViewBag.Questions;
+    var answers = ViewBag.Answers;
+    var resultsCount = ViewBag.ResultsCount;
+    var categories = ViewBag.Category;
+    var averageCategory = ViewBag.AverageCategory;
+    var rankingList = ViewBag.SaatiResults;
+    var category1 = ViewBag.Category1;
+    var category2 = ViewBag.Category2;
+    var category3 = ViewBag.Category3;
+    var category4 = ViewBag.Category4;
+    var a = false;
+}
+    <div class="center-block" style="width:80%; margin-bottom:50px">
+        <div>
+            <h2>Результаты опроса</h2>
+        </div>
+        <h4>По результатам опросов по методу Саати образовательные программы групп магистратуры были ранжированы следующим образом (от лучшей к худшей):</h4>
+        <d>
+            @*<p style="padding-bottom: 50px">*@
+            <table id="table" class="table-striped" style="width :100%">
+                <tbody>
+                    @{ foreach (var rank in rankingList)
+                        {
+                            @*<tr onclick="OpenInterview(@interview.Id)" style="height:50px">*@
+                            <tr style="height:50px">
+                                <td style="text-align:center" class="rank">
+                                    @rank.groupName
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </d>
+        <c hidden>
+            <table id="table" class="table-striped" style="width :100%">
+                <tbody>
+                    @{ foreach (var rank in category1)
+                        {
+                            <tr style="height:50px">
+                                <td style="text-align:center" class="rank">
+                                    @rank.groupName
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </c>
+        <l hidden>
+            <table id="table" class="table-striped" style="width :100%">
+                <tbody>
+                    @{ foreach (var rank in category2)
+                        {
+                            <tr style="height:50px">
+                                <td style="text-align:center" class="rank">
+                                    @rank.groupName
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </l>
+        <m hidden>
+            <table id="table" class="table-striped" style="width :100%">
+                <tbody>
+                    @{ foreach (var rank in category3)
+                        {
+                            <tr style="height:50px">
+                                <td style="text-align:center" class="rank">
+                                    @rank.groupName
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </m>
+        <t hidden>
+            <table id="table" class="table-striped" style="width :100%">
+                <tbody>
+                    @{ foreach (var rank in category4)
+                        {
+                            <tr style="height:50px">
+                                <td style="text-align:center" class="rank">
+                                    @rank.groupName
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+
+        </t>
+
+        <br />
+        <h4>Выберите критерий, по которому ранжировать программы:</h4>
+        @*@{ foreach (var answer in answers1)
+            {
+                if (a == false && answer.IdQuestion == 0)
+                {
+                    <input type="radio" onclick="react(@answer.Id)" id="question" name="@ViewBag.QuestionsId" value="@answer.Id">@answer.Answer<br>
+                }
+            }
+            a = false;
+        }*@
+
+
+        @*<d hidden>
+            <input class="form-control" type="button" id="nextQuestion" onclick="NextQuestion()" value="Далее" style="height:inherit; margin-left:50px; width:200px; border-radius:8px; background-color:cornflowerblue; color:ivory" />
+        </d>*@
+
+        @*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*@
+
+    </div>
+<div style="margin-left:10%; width:auto">
+    <select onchange="react()" class="form-control" id="CategorySelect" style=" width:auto">
+        <option selected value="5">Общее ранжирование</option>
+        @{ foreach (var cat in categories)
+            {
+                <option value="@cat.Id">@cat.Name</option>
+            }
+        }
+    </select>
+</div>
+
+<script>
+    function returnResult(id) {
+        return id == id;
+    }
+
+    function react() {
+        var id = document.getElementById("CategorySelect");
+        if (id.value == 1) {
+            $("c").show();
+            $("l").hide();
+            $("m").hide();
+            $("t").hide();
+            $("d").hide();
+        } else if (id.value == 2) {
+            $("c").hide();
+            $("l").show();
+            $("m").hide();
+            $("t").hide();
+            $("d").hide();
+        } else if (id.value == 3) {
+            $("c").hide();
+            $("l").hide();
+            $("m").show();
+            $("t").hide();
+            $("d").hide();
+        } else if (id.value == 4) {
+            $("c").hide();
+            $("l").hide();
+            $("m").hide();
+            $("t").show();
+            $("d").hide();
+        } else {
+            $("c").hide();
+            $("l").hide();
+            $("m").hide();
+            $("t").hide();
+            $("d").show();
+        }
+        //var temp = id.value;
+        //switch (temp) {
+        //    case 1:
+        //        alert("1");
+        //        $("c").show();
+        //        $("l").hide();
+        //        $("m").hide();
+        //        $("t").hide();
+        //        $("d").hide();
+        //        break;
+        //    case 2:
+        //        alert("2");
+        //        $("c").hide();
+        //        $("l").show();
+        //        $("m").hide();
+        //        $("t").hide();
+        //        $("d").hide();
+        //        break;
+        //    case 3:
+        //        alert("3");
+        //        $("c").hide();
+        //        $("l").hide();
+        //        $("m").show();
+        //        $("t").hide();
+        //        $("p").hide();
+        //        break;
+        //    case 4:
+        //        alert("4");
+        //        $("c").hide();
+        //        $("l").hide();
+        //        $("m").hide();
+        //        $("t").show();
+        //        $("d").hide();
+        //        break;
+        //    default:
+        //        $("c").hide();
+        //        $("l").hide();
+        //        $("m").hide();
+        //        $("t").hide();
+        //        $("d").show();
+        //        break;
+        //}
+    }
+</script>

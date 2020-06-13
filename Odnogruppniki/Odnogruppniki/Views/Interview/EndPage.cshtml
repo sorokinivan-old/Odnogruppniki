@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "Опросы";
+    var questions = ViewBag.QuestionList;
+    var results = ViewBag.ResultList;
+    var categories = ViewBag.Category;
+}
+<div class="center-block" style="width:80%">
+    <div>
+        <h2>Спасибо за прохождение опроса</h2>
+        <h2>Ваши ответы в тесте</h2>
+    </div>
+    <p style="padding-bottom: 50px">
+        @{ if (categories.Count != 0)
+            {
+                foreach (var category in categories)
+                {
+                    <h2>@category.Name</h2><br>
+                    foreach (var question in questions)
+                    {
+                        if (question.IdCategory == category.Id || question.IdCategory == null)
+                        {
+                            <h3>@question.Question</h3><br>
+                            foreach (var result in results)
+                            {
+                                if (result.id_question == question.Id)
+                                {
+                                    @result.answer<Br><br>
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+            else
+            {
+                foreach (var question in questions)
+                {
+                        <h3>@question.Question</h3><br>
+                        foreach (var result in results)
+                        {
+                            if (result.id_question == question.Id)
+                            {
+                                @result.answer<Br><br>
+                            }
+                        }
+
+                }
+            }
+
+        }
+    </p>
+</div>

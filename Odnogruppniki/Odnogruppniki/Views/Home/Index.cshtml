@@ -1,0 +1,238 @@
+﻿@{
+    ViewBag.Title = "Главная";
+}
+
+@{
+    var faculties = ViewBag.Faculties;
+    var departments = ViewBag.Departments;
+    var users = ViewBag.Users;
+    var interviews = ViewBag.Interviews;
+    var groups = ViewBag.Groups;
+}
+
+<script type="text/javascript">
+    function editTelegram() {
+        window.location.href = '@Url.Action("TLSettings", "Home")';
+    }
+
+    function facadd() {
+        var name = $("#facultyadd").val();
+        var data = {
+            'name': name
+        };
+        if (name == "") {
+            alert('Type a name!');
+        } else {
+                        $.ajax({
+                            url: '@Url.Action("AddFaculty", "Home")',
+                            type: 'POST',
+                            data: data,
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data.Success) {
+                                    window.location = '@Url.Action("index", "Home")';
+                                } else {
+                                    alert(data.Error);
+                                }
+                            }
+                        });
+                    }
+    }
+
+    function depadd() {
+        var name = $("#departmentadd").val();
+        var faculty = document.getElementById("facultySelect");
+        var id_faculty = faculty.selectedOptions[0].value;
+        var data = {
+            'name': name,
+            'id_faculty': id_faculty
+        };
+        if (name == "") {
+            alert('Type a name!');
+        } else {
+                        $.ajax({
+                            url: '@Url.Action("AddDepartment", "Home")',
+                            type: 'POST',
+                            data: data,
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data.Success) {
+                                    window.location = '@Url.Action("index", "Home")';
+                                } else {
+                                    alert(data.Error);
+                                }
+                            }
+                        });
+                    }
+    }
+
+    function groupadd() {
+        var name = $("#groupadd").val();
+        var department = document.getElementById("departmentSelect");
+        var id_department = department.selectedOptions[0].value;
+        var data = {
+            'name': name,
+            'id_department': id_department
+        };
+        if (name == "") {
+            alert('Type a name!');
+        } else {
+                        $.ajax({
+                            url: '@Url.Action("AddGroup", "Home")',
+                            type: 'POST',
+                            data: data,
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data.Success) {
+                                    window.location = '@Url.Action("index", "Home")';
+                                } else {
+                                    alert(data.Error);
+                                }
+                            }
+                        });
+                    }
+    }
+
+    function openInterviewToUser() {
+        var UserId = $("#UserSelect").val();
+        var InterviewId = $("#InterviewSelect").val();
+        var data = {
+            'UserId': UserId,
+            'InterviewId': InterviewId
+        };
+        if (InterviewId == "") {
+            alert('Type a interview!');
+        } else {
+                        $.ajax({
+                            url: '@Url.Action("OpenInterviewToUser", "Interview")',
+                            type: 'POST',
+                            data: data,
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data.Success) {
+                                    window.location = '@Url.Action("index", "Home")';
+                                } else {
+                                    alert(data.Error);
+                                }
+                            }
+                        });
+                    }
+    }
+    function openInterviewToGroup() {
+        var GroupId = $("#GroupSelect").val();
+        var InterviewId = $("#InterviewSelect").val();
+        var data = {
+            'GroupId': GroupId,
+            'InterviewId': InterviewId
+        };
+        if (InterviewId == "") {
+            alert('Type a interview!');
+        } else {
+                        $.ajax({
+                            url: '@Url.Action("OpenInterviewToGroup", "Interview")',
+                            type: 'POST',
+                            data: data,
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data.Success) {
+                                    window.location = '@Url.Action("index", "Home")';
+                                } else {
+                                    alert(data.Error);
+                                }
+                            }
+                        });
+                    }
+    }
+</script>
+
+@if (ViewBag.RoleName != "Admin")
+{
+    <h1>Добро пожаловать в Одногруппники!</h1>
+    <h2>Наша социальная сеть создана для того, чтобы тебе было намного удобнее общаться с одногруппниками,</h2>
+    <h2>узнавать актуальные новости и получать информацию от преподавателей!</h2>
+    <h2>Приятного пользования!</h2>
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+
+    if (ViewBag.RoleName == "Admin")
+    {
+        <input class="form-control" type="button" id="editButton" onclick="editTelegram()" value="Настройка уведомлений Telegram" style="height:inherit; margin-left:8px; width:300px; border-radius:8px; background-color:cornflowerblue; color:ivory" />
+        <div class="row">
+            <h4 style="margin-left:20px">Добавление института</h4>
+            <input class="form-control" type="text" name="facultyadd" id="facultyadd" style="margin-left:20px" />
+            <input class="form-control" type="button" id="facultyButton" onclick="facadd()" value="Добавить институт" style="height:inherit; margin-left:20px; width:200px; border-radius:8px; background-color:cornflowerblue; color:ivory" />
+        </div>
+        <br />
+        <div class="row">
+            <h4 style="margin-left:20px">Добавление кафедры</h4>
+            <input class="form-control" type="text" name="departmentadd" id="departmentadd" style="margin-left:20px" />
+            <select class="form-control" id="facultySelect" style="margin-left:20px">
+                <option selected>Выберите институт...</option>
+                @{ foreach (var faculty in faculties)
+                    {
+                        <option value="@faculty.Id">@faculty.Name</option>
+                    }
+                }
+            </select>
+            <input class="form-control" type="button" id="departmentButton" onclick="depadd()" value="Добавить кафедру" style="height:inherit; margin-left:20px; width:200px; border-radius:8px; background-color:cornflowerblue; color:ivory" />
+        </div>
+        <br />
+        <br />
+        <div class="row">
+            <h4 style="margin-left:20px">Добавление группы</h4>
+            <input class="form-control" type="text" name="groupadd" id="groupadd" style="margin-left:20px" />
+            <select class="form-control" id="departmentSelect" style="margin-left:20px">
+                <option selected>Выберите кафедру...</option>
+                @{ foreach (var department in departments)
+                    {
+                        <option value="@department.Id">@department.Name</option>
+                    }
+                }
+            </select>
+            <input class="form-control" type="button" id="groupButton" onclick="groupadd()" value="Добавить группу" style="height:inherit; margin-left:20px; width:200px; border-radius:8px; background-color:cornflowerblue; color:ivory" />
+        </div>
+        <div class="row">
+            <h4 style="margin-left:20px">Открытие опроса</h4>
+            <select class="form-control" id="InterviewSelect" style="margin-left:20px">
+                <option selected>Выберите опрос...</option>
+                @{ foreach (var interview in interviews)
+                    {
+                        <option value="@interview.Id">@interview.Name</option>
+                    }
+                }
+            </select>
+            <br />
+        </div>
+        <div class="row">
+            <select class="form-control" id="UserSelect" style="margin-left:20px">
+                <option selected>Выберите студента...</option>
+                @{ foreach (var user in users)
+                    {
+                        <option value="@user.IdUser">@user.Name</option>
+                    }
+                }
+            </select>
+            <br />
+            <input class="form-control" type="button" id="departmentButton" onclick="openInterviewToUser()" value="Открыть опрос студенту" style="height:inherit; margin-left:20px; width:200px; border-radius:8px; background-color:cornflowerblue; color:ivory" />
+        </div>
+        <br />
+        <div class="row">
+            <select class="form-control" id="GroupSelect" style="margin-left:20px">
+                <option selected>Выберите группу...</option>
+                @{ foreach (var group in groups)
+                    {
+                        <option value="@group.Id">@group.Name</option>
+                    }
+                }
+            </select>
+            <br />
+            <input class="form-control" type="button" id="departmentButton" onclick="openInterviewToGroup()" value="Открыть опрос группе" style="height:inherit; margin-left:20px; width:200px; border-radius:8px; background-color:cornflowerblue; color:ivory" />
+        </div>
+        <br />
+        <br>
+        <br>
+        <br>
+    }
+}

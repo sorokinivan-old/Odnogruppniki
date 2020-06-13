@@ -1,0 +1,87 @@
+﻿
+@{
+    ViewBag.Title = "Мои сообщения";
+}
+@{ 
+    var messages = ViewBag.Messages;
+}
+
+<script>
+    function openMessage(id) {
+        window.location = '@Url.Action("OpenMessage","PersonalMessage")' + '?id=' + id;
+    }
+    function openMessages(par) {
+        window.location = '@Url.Action("OpenMessages","PersonalMessage")' + '?par=' + par;
+    }
+</script>
+
+<div style="width:80%; margin-left:10%; margin-right:10%; padding-top:5%; margin-bottom:2%">
+    <button class="form-control" type="button" onclick="openMessages(1)" style="height:inherit; width:100px; border-radius:8px; background-color:cornflowerblue; color:ivory">
+        <span class="glyphicon glyphicon-arrow-up"></span>Исходящие
+    </button>
+    <button class="form-control" type="button" onclick="openMessages(2)" style="height:inherit; width:100px; border-radius:8px; background-color:cornflowerblue; color:ivory">
+        <span class="glyphicon glyphicon-arrow-down"></span>Входящие
+    </button>
+</div>
+
+<style>
+    #container {
+        position: relative;
+    }
+    #top,
+    #bottom {
+        top: 0;
+        left: 0;
+    }
+    #bottom {
+        width: 70%;
+        height: 50%;
+        z-index: 2;
+        text-align: center;
+    }
+    #top {
+        width: 50px;
+        height: 50px;
+        z-index: 1;
+    }
+</style>
+
+<div class="center-block" style="width:80%">
+    @{
+        if (messages.Count == 0)
+        {
+            <div>
+                <h2>У вас нет сообщений</h2>
+            </div>
+        }
+        else
+        {
+            foreach (var message in messages)
+            {
+                <div style="display:block; background-color:gainsboro; border-radius:6px; height:150px" onclick="openMessage(@message.id)">
+                    <div id="container" class="pull-left col-sm-5" style="margin-right:40px; width:10%; height:inherit; font-size:inherit; padding-top:10px">
+                        <div id="top">
+                            <img src="@message.photo_out" class="img-circle" style="width:inherit; height:inherit" />
+                        </div>
+                        <div id="bottom">
+                            <b>@message.name_out</b>
+                        </div>
+                    </div>
+                    <div class="col-sm-10" style="width:inherit; font-size:inherit; height:inherit; padding-top:15px">
+                        @if(message.message.Length > 50)
+                        {
+                            message.message = message.message.Substring(0, 50) + "...";
+                        }
+                         @message.message
+                    </div>
+                    <div class="pull-right" style="margin-left:3%; margin-right:5%; width:5%; height:inherit">
+                        @message.dateString
+                    </div>
+                </div>
+                <br />
+            }
+            <br />
+        }
+    }
+</div>
+

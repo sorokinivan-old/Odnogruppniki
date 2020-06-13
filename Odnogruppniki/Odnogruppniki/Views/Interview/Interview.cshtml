@@ -1,0 +1,44 @@
+﻿@{
+    ViewBag.Title = "Опросы";
+    var interviews = ViewBag.Interviews;
+    var donesInterviews = ViewBag.DonesInterview;
+}
+<div class="center-block" style="width:80%">
+    <div>
+        <h2>Список доступных опросов</h2>
+    </div>
+    <div>
+        <table id="table" class="table-striped" style="width :100%">
+            <thead>
+                <tr>
+                    <th style="text-align:center">Название опроса</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ foreach (var interview in interviews)
+                    {
+                        @*<tr onclick="OpenInterview(@interview.Id)" style="height:50px">*@
+                        <tr onclick="OpenInterviewQuestion(@interview.Id)" style="height:50px">
+                            <td style="text-align:center" class="username">
+                                @interview.Name
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+
+    function OpenInterview(Id) {
+        window.location = '@Url.Action("OpenInterview", "Interview")' + '?Id=' + Id;
+    }
+    @*function OpenInterviewQuestion(Id) {
+        window.location = '@Url.Action("GetQuestion", "Interview")' + '?Id=' + Id;
+    }*@
+    function OpenInterviewQuestion(Id) {
+        @*window.location = '@Url.Action("GetInterview", "Interview", new { IdQuestion = 1, IdInterview =  1})';*@
+        window.location = '@Url.Action("GetInterview", "Interview")' + '?Id=' + Id;
+    }
+</script>

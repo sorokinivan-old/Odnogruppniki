@@ -1,0 +1,61 @@
+﻿<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous">
+</script>
+<script src="~/Content/table_search.js"></script>
+
+@{
+    ViewBag.Title = "Поиск";
+    var users = ViewBag.SearchUsers;
+}
+
+<div style="width:80%; margin-left:10%; margin-right:10%">
+    <input type="text" id="input" placeholder="Поиск" class="pull-left" style="width:300px; max-width:inherit; border-radius:20px; padding-left:5%; padding-right:5%; text-align:left; border:solid; border-color:steelblue; background-color:lightsteelblue" />
+            <br />
+            <br />
+            <br />
+            <table id ="table" class="table-striped" style="width :100%">
+                <thead>
+                    <tr>
+                        <th style="text-align:center">Фотография</th>
+                        <th style="text-align:center">Имя</th>
+                        <th style="text-align:center">Институт</th>
+                        <th style="text-align:center">Кафедра</th>
+                        <th style="text-align:center">Группа</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ foreach (var user in users)
+                        {
+                            <tr onclick="openProfile(@user.id_user)">
+                                <td style="text-align:center">
+                                    <img src="@user.photo" height="50" width="50" style="border:double; color:cornflowerblue; border-radius:100px " />
+                                </td>
+                                <td style="text-align:center" id="@user.name" class="username">
+                                    @user.name
+                                </td>
+                                <td style="text-align:center">
+                                    @user.faculty
+                                </td>
+                                <td style="text-align:center">
+                                    @user.department
+                                </td>
+                                <td style="text-align:center">
+                                    @user.group
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+</div>
+
+<script>
+    $('#input').keyup(function () {
+        table_search($('#input').val(), $('#table tbody tr'), '012');
+    });
+
+    function openProfile(id) {
+        window.location = '@Url.Action("OpenProfile", "Home")' + '?id=' + id;
+    }
+</script>

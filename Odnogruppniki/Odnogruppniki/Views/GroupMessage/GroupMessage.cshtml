@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewBag.Title = "Групповые сообщения";
+    var message = ViewBag.Message;
+    var user = ViewBag.User;
+}
+
+
+
+@if (ViewBag.IsAnswer)
+{
+    <div class="row" style="padding-left:5%; padding-right:5%; width:80%; margin-left:10%">
+        <br />
+        <div class="pull-left">
+            from <b>@message.name</b>
+        </div>
+        <div class="pull-right">
+            @message.dateString
+        </div>
+    </div>
+    <div class="jumbotron" style="margin-left:10%; margin-right:10%; padding-left: 10%; padding-right:10%">
+        @message.message
+    </div>
+}
+else
+{
+    <br /><br />
+    if (ViewBag.RoleName != "Guest" && ViewBag.RoleName != "Student")
+    {
+        if (message.name != user)
+        {
+            <div style="display:flex; justify-content:space-between; margin-left:10%; margin-right:10%">
+                <input type="text" id="textMessage" class="pull-left" style="flex-grow:2; width:90%; max-width:inherit; max-height:40px; height:40px; border-radius:20px; padding-left:5%; padding-right:5%; text-align:left; border:solid; border-color:steelblue; background-color:lightsteelblue" />
+                <button type="button" style="background-color:steelblue; border-radius:20px; width:40px">
+                    <span class="glyphicon glyphicon-send" onclick="sendMessage(@message.id_out)"></span>
+                </button>
+            </div>
+        }
+    }
+}
+
+<script>
+                function sendMessage(id_out) {
+        var url = '@Url.Action("SendMessage", "GroupMessage")';
+        var message = $("#textMessage").val();
+        var data = { id_out: id_out, message: message };
+        $.post(url, data).done(function () {
+            window.location = '@Url.Action("Index", "GroupMessage")';
+        });
+    }
+</script>
+
+
+
+
+

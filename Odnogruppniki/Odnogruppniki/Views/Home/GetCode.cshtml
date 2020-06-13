@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewBag.Title = "GetCode";
+}
+
+<script>
+    function sendCode() {
+        var code = $("#code").val();
+        var data = {
+            'code': code
+        };
+        $.ajax({
+            type: 'POST',
+            data: data,
+            url: '@Url.Action("MakeAuth", "Home")',
+            dataType: 'json'
+        });
+    }
+</script>
+
+<div style="width:80%; margin-left:10%; margin-right:10%">
+    <div>
+        <h1>Введите пришедший код:</h1>
+    </div>
+    <div>
+        <input type="text" class="jumbotron" id="code"/><button type="button" onclick="sendCode()"><span class="glyphicon glyphicon-eye-open"></span></button>
+    </div>
+</div>
+

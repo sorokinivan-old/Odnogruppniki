@@ -1,0 +1,144 @@
+﻿
+@{
+    ViewBag.Title = "Register";
+}
+@{
+    var faculties = ViewBag.Faculties;
+    var departments = ViewBag.Departments;
+    var groups = ViewBag.Groups;
+}
+
+<script type="text/javascript">
+    function reg() {
+        var login = $("#login").val();
+        var pass = $("#pass").val();
+        var passConfirm = $("#passConfirm").val();
+        var fio = $("#fio").val();
+        var city = $("#city").val();
+        var phone = $("#phone").val();
+        //var id_group = $("#groupSelect").val();
+        var faculty = document.getElementById("facultySelect");
+        var id_faculty = faculty.selectedOptions[0].value;
+        var department = document.getElementById("departmentSelect");
+        var id_department = department.selectedOptions[0].value;
+        var group = document.getElementById("groupSelect");
+        var id_group = group.selectedOptions[0].value;
+        var data = {
+            'login': login,
+            'password': pass,
+            'fio': fio,
+            'city': city,
+            'id_faculty': id_faculty,
+            'id_department': id_department,
+            'id_group': id_group,
+            'phone': phone
+        };
+        if (login == "") {
+            alert('Type a login!');
+        } else {
+            if (pass == "") {
+                alert('Type a password!');
+            } else {
+                if (pass != passConfirm) {
+                    alert('Password and its confirmation are not equals!');
+                } else {
+                    if (phone == "") {
+                        alert('Type a phone number')
+                    } else {
+                        $.ajax({
+                            url: '@Url.Action("Register", "Home")',
+                            type: 'POST',
+                            data: data,
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data.Success) {
+                                    window.location = '@Url.Action("Login", "Home")';
+                                } else {
+                                    alert(data.Error);
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+
+
+        }
+    };
+
+
+
+
+    function choose(select) {
+        var department = document.getElementById("departmentSelect");
+        
+        return grp;
+    }
+</script>
+
+<br />
+<br />
+<br />
+<div class="table" style="width:60%; margin-left:20%; margin-right:20%; text-align: -webkit-center">
+    <div class="row">
+        <h4>Логин</h4>
+        <input type="text" name="login" id="login" style="width:68%" />
+    </div>
+    <div class="row">
+        <h4>Пароль</h4>
+        <input type="password" id="pass" style="width:68%" />
+    </div>
+    <div class="row">
+        <h4>Подтверждение</h4>
+        <input type="password" id="passConfirm" style="width:68%" />
+    </div>
+    <div class="row">
+        <h4>ФИО</h4>
+        <input type="text" name="fio" id="fio" style="width:68%" />
+    </div>
+    <div class="row">
+        <h4>Город</h4>
+        <input type="text" name="city" id="city" style="width:68%" />
+    </div>
+    <div class="row">
+        <h4>Номер телефона</h4>
+        <input type="text" name="phone" id="phone" style="margin-top:1px; width:68%" />
+    </div>
+    <div class="row">
+        <h4>Институт</h4>
+        <select id="facultySelect" style="width:68%">
+            <option selected>Выберите институт...</option>
+            @{ foreach (var faculty in faculties)
+                {
+                    <option value="@faculty.Id">@faculty.Name</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="row">
+        <h4>Кафедра</h4>
+        <select id="departmentSelect" onchange="choose(this)" style="width:68%">
+            <option selected>Выберите кафедру...</option>
+            @{ foreach (var department in departments)
+                {
+                    <option value="@department.Id">@department.Name</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="row">
+        <h4>Группа</h4>
+        <select id="groupSelect" name="groupSelector" style="width:68%">
+            <option selected>Выберите группу...</option>
+            @{ foreach (var group in groups)
+                {
+                    <option value="@group.Id">@group.Name</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="row center-block" style="margin-top:8px">
+        <br />
+        <input class="form-control" type="button" id="editButton" onclick="reg()" value="Регистрация" style="height:inherit; width:200px; border-radius:8px; background-color:cornflowerblue; color:ivory" />
+    </div>
+</div>

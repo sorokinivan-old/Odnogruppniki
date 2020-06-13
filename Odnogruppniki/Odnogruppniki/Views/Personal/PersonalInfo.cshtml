@@ -1,0 +1,97 @@
+﻿
+@{
+    ViewBag.Title = "Моя страница";
+}
+<br /><br />
+<script>
+    function newMessage() {
+        window.location = '@Url.Action("NewMessage", "PersonalMessage")'+'?id='+@ViewBag.UserId;
+    }
+
+    function editPage() {
+        window.location.href = '@Url.Action("Edit","Personal")';
+    }
+
+    function changeRole() {
+        $("#role").addClass("hidden");
+        $("#roleddl").removeClass("hidden");
+    }
+
+    function selectRole() {
+        var role = $("#roleddl").val();
+        var url = '@Url.Action("ChangeRole","Personal")';
+        var data = { id: @ViewBag.UserId, role: role };
+        $.post(url, data).done(function () {
+            location.reload();
+        });
+    }
+</script>
+      <div>
+          <div style="overflow: hidden;">
+              <div style="width:1000%">
+                  <div style="display:block;float: left">
+                      <img src="@ViewBag.Photo" alt="Здесь должна быть картинка" height="300" width="300" style="border:double; color:cornflowerblue; border-radius:100px ">
+                  </div>
+                  <div class="col-md-3" style="float: left">
+                      <h4>О себе</h4>
+                      <div class="jumbotron" style="height:250px">
+                          @ViewBag.AboutInfo
+                      </div>
+                  </div>
+              </div>
+          </div>
+          @if (ViewBag.MyPage)
+          {
+              <div>
+                  <input class="form-control" type="button" id="editButton" onclick="editPage()" value="Редактировать" style="height:inherit; margin-left:50px; width:200px; border-radius:8px; background-color:cornflowerblue; color:ivory" />
+              </div>
+          }
+          else
+          {
+              <div>
+                  <input class="form-control" type="button" id="editButton" onclick="newMessage()" value="Написать" style="height:inherit; margin-left:50px; width:200px; border-radius:8px; background-color:cornflowerblue; color:ivory" />
+              </div>
+          }
+
+          <table class="table" style="width:300px; border:double;border-color:cornflowerblue;float: left; margin-bottom:5%; margin-top:1%">
+              <tbody>
+                  <tr>
+                      <td>Имя:</td>
+                      <td>@ViewBag.Name</td>
+                  </tr>
+                  <tr>
+                      <td style="background-color:cornflowerblue">Институт:</td>
+                      <td style="background-color:cornflowerblue">@ViewBag.Faculty</td>
+                  </tr>
+                  <tr>
+                      <td>Кафедра:</td>
+                      <td>@ViewBag.Department</td>
+                  </tr>
+                  <tr>
+                      <td style="background-color:cornflowerblue">Город:</td>
+                      <td style="background-color:cornflowerblue">@ViewBag.City</td>
+                  </tr>
+                  <tr>
+                      <td>Группа:</td>
+                      <td>@ViewBag.Group</td>
+                  </tr>
+                  @if(ViewBag.RoleName == "Admin")
+                  {
+                      <tr onclick="changeRole()">
+                          <td style="background-color:cornflowerblue">
+                              Роль:
+                          </td>
+                          <td style="background-color:cornflowerblue">
+                              <p id="role">@ViewBag.Role</p>
+                              <select id="roleddl" class="hidden" onchange="selectRole()">
+                                  @foreach (var role in ViewBag.Roles)
+                                  {
+                                      <option value="@role.Id">@role.Name</option>
+                                  }
+                              </select>
+                          </td>
+                      </tr>
+                  }
+              </tbody>
+          </table>
+      </div>

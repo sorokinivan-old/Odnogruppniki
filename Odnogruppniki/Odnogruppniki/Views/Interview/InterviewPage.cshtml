@@ -1,0 +1,152 @@
+﻿@{
+    ViewBag.Title = "Опросы";
+    var interviews = ViewBag.Interviews;
+    var questions = ViewBag.Questions;
+    var answers = ViewBag.Answers;
+    var questionstext = ViewBag.QuestionsText;
+    var questionsid = ViewBag.QuestionsId;
+    var answers1 = ViewBag.AnswersOne;
+    var categories = ViewBag.Category;
+    var a = false;
+    int resultAnswer = 0;
+}
+@*<div class="center-block" style="width:80%">
+    <div>
+        <h2>Опрос (в процессе реализации)</h2>
+    </div>
+    <p>
+        @{ foreach (var question in questions)
+            {
+            <p style="padding-bottom: 50px">
+                <b>@question.Question</b><Br>
+                @{ foreach (var answer in answers)
+                    {
+                        if (answer.IdQuestion != 0 && answer.IdQuestion == question.Id)
+                        {
+                            <input type="radio" name="@question.Id" value="yes">@answer.Answer<br>
+                            a = true;
+                        }
+                    }
+                }
+                @{ foreach (var answer in answers)
+                    {
+                        if (a == false && answer.IdQuestion == 0)
+                        {
+                            <input type="radio" name="@question.Id" value="yes">@answer.Answer<br>
+                        }
+                    }
+                    a = false;
+                }
+
+            </p>
+        }
+        }
+        </p>
+    </div>*@
+
+    <script type="text/javascript">
+        function NextQuestion() {
+            var Id = @ViewBag.QuestionsId + 1;
+            var IdA = resultAnswer;
+        var data = {
+            'IdQuestion': Id,
+            'IdAnswer': IdA
+        };
+        //alert(resultAnswer);
+        $.ajax({
+            url: '@Url.Action("SaveAnswer", "Interview")',
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            success: function (data) {
+                if (data.Success) {
+                    @*window.location = '@Url.Action("GetQuestion", "Interview")' + '?IdQuestion=' + idq;*@
+                    window.location = '@Url.Action("GetQuestion", "Interview")' + '?Id=' + Id;
+                    @*window.location = '@Url.Action("Login", "Home")';*@
+                } else {
+                    alert(data.Error);
+                }
+            }
+        });
+        }
+
+        
+        </script>
+<div class="center-block" style="width:80%">
+    <div>
+        <h2>Опрос</h2>
+    </div>
+    <p>
+    <p style="padding-bottom: 50px">
+        @{
+            if (categories != null)
+            {
+                <b>Категория: @categories.Name</b><Br>
+            }
+        }
+        <b>@ViewBag.QuestionsText</b><Br>
+        @{ foreach (var answer in answers1)
+            {
+                if (answer.IdQuestion != 0 && answer.IdQuestion == ViewBag.QuestionsId)
+                {
+                    <input type="radio" onclick="react(@answer.Id)" id="question" name="@ViewBag.QuestionsId" value="yes">@answer.Answer<br>
+                    a = true;
+                }
+            }
+        }
+        @{ foreach (var answer in answers1)
+            {
+                if (a == false && answer.IdQuestion == 0)
+                {
+                    <input type="radio" onclick="react(@answer.Id)" id="question" name="@ViewBag.QuestionsId" value="@answer.Id">@answer.Answer<br>
+                }
+            }
+            a = false;
+        }
+
+    </p>
+    <d hidden>
+        <input class="form-control" type="button" id="nextQuestion" onclick="NextQuestion()" value="Далее" style="height:inherit; margin-left:50px; width:200px; border-radius:8px; background-color:cornflowerblue; color:ivory" />
+    </d>
+</div>
+
+<script>
+
+    @*function NextQuestion() {
+        alert(resultAnswer);
+        window.location = '@Url.Action("GetQuestion", "Interview", new { IdQuestion = ViewBag.QuestionsId+1, IdAnswer = 1 })';
+    }*@
+    //function NextQuestion() {
+    //    var data = {
+    //        'IdQuestion': ViewBag.QuestionsId+1,
+    //        'IdAnswer': resultAnswer
+    //    };
+    //    alert(resultAnswer);
+    //    @*$.ajax({
+            url: '@Url.Action("SaveAnswer", "Interview")',
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            success: function (data) {
+                if (data.Success) {
+                    window.location = '@Url.Action("GetQuestion", "Interview")';
+                } else {
+                    alert(data.Error);
+                }
+            }
+        });*@
+    //}
+
+    function react(Id) {
+        isHidden = document.querySelector('input[name="@ViewBag.QuestionsId"]:checked').value;
+        resultAnswer = Id;
+        //alert(resultAnswer);
+        if (isHidden) {
+            $("d").show();
+            }
+    }
+
+   // document.querySelector('p').onclick = function(e) {
+	  //  $("d").hide();
+	  //}
+    </script>
